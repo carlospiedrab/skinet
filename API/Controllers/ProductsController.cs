@@ -13,6 +13,7 @@ namespace API.Controllers
         private readonly StoreContext _context;
         public ProductsController(StoreContext context)
         {
+            // Inizialice Context
             _context = context;
         }
 
