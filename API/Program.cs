@@ -11,7 +11,12 @@ using API.Errors;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+/*var port = Environment.GetEnvironmentVariable("PORT");
+builder.WebHost.UseUrls("http://*:" + port);*/
+
 // Add services to the container.
+
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>
@@ -26,6 +31,7 @@ builder.Services.AddScoped<IProductRepository,ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
+
 builder.Services.Configure<ApiBehaviorOptions>(options => 
 {
     options.InvalidModelStateResponseFactory = actionContext => 
@@ -38,16 +44,23 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
         {
             Errors = errors
         }; 
+
         return new BadRequestObjectResult(errorResponse);
     };
 });
-builder.Services.AddCors(opt => 
+
+
+
+ builder.Services.AddCors(opt => 
 {
     opt.AddPolicy("CorsPolicy", policy => 
     {
         policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
+        //policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
     });
 });
+
+
 
 var app = builder.Build();
 
@@ -94,8 +107,10 @@ app.UseHttpsRedirection();
 
 app.UseCors("CorsPolicy");
 
+
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();
